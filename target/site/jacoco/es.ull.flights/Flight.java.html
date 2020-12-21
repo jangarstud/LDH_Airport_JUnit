@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Flight.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ch13-continuous</a> &gt; <a href="index.source.html" class="el_package">es.ull.flights</a> &gt; <span class="el_source">Flight.java</span></div><h1>Flight.java</h1><pre class="source lang-java linenums">/*
+ * ========================================================================
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ========================================================================
+ */
+package es.ull.flights;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import es.ull.passengers.Passenger;
+
+/*! Clase del vuelo */
+public class Flight {
+
+    private String flightNumber; /**&lt; Una cadena. El número del vuelo. */
+    private int seats; /**&lt; Un entero. El número de asientos del vuelo. */
+<span class="fc" id="L35">    private Set&lt;Passenger&gt; passengers = new HashSet&lt;&gt;(); /**&lt; Una colección Set de pasajeros. Una colección de pasajeros del vuelo */</span>
+
+<span class="fc" id="L37">    private static String flightNumberRegex = &quot;^[A-Z]{2}\\d{3,4}$&quot;; /**&lt; Una cadena. El regex para el número de vuelo. */</span>
+<span class="fc" id="L38">    private static Pattern pattern = Pattern.compile(flightNumberRegex); /**&lt; Un objeto Pattern. El patrón del regex para flightNumberRegex. */</span>
+
+    /**
+     * Constructor de la clase del vuelo.
+     *
+     * En este constructor se inicializa el objeto Flight siempre y cuando el número de vuelo se corresponda con el patrón
+     * regex establecido. Esto evitará crear vuelos completamente inventados. En caso de no introducir un código de vuelo
+     * correcto, se devolverá una excepción RuntimeException informando del mensaje &quot;Invalid flight number&quot;.
+     * @param flightNumber Una cadena. Valor que tomará el número de vuelo para el nuevo objeto vuelo.
+     * @param seats Un entero. Valor que tomará el número de asientos para el nuevo objeto vuelo.
+     */
+<span class="fc" id="L49">    public Flight(String flightNumber, int seats) {</span>
+<span class="fc" id="L50">        Matcher matcher = pattern.matcher(flightNumber);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (!matcher.matches()) {</span>
+<span class="fc" id="L52">            throw new RuntimeException(&quot;Invalid flight number&quot;);</span>
+        }
+<span class="fc" id="L54">        this.flightNumber = flightNumber;</span>
+<span class="fc" id="L55">        this.seats = seats;</span>
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Getter del número de vuelo del vuelo.
+     *
+     * Este método devuelve el valor que tiene el objeto vuelo para el atributo 'flightNumber'
+     * @return El número del vuelo
+     */
+    public String getFlightNumber() {
+<span class="fc" id="L65">        return flightNumber;</span>
+    }
+
+    /**
+     * Getter del número de passajeros del vuelo.
+     *
+     * Este método devuelve el valor que tiene el objeto vuelo para el atributo 'passengers'
+     * @return El número de pasajeros del vuelo
+     */
+    public int getNumberOfPassengers() {
+<span class="fc" id="L75">        return passengers.size();</span>
+    }
+
+    /**
+     * Método que permite añadir al vuelo a un pasajero.
+     *
+     * En este método se añade a aquel pasajero que se le pase como parámetro. Es requisito imprescindible para poder añadirlo
+     * el no exceder el cupo de asientos establecido para el vuelo. En ese caso se lanzará una excepción RuntimeException
+     * con el mensaje &quot;Not enough seats for flight&quot; + &quot;'flightNumber'&quot;. En otro caso, se añadirá al pasajero y se notificará
+     * el añadido con un booleano.
+     * @param passenger El pasajero que se desea añadir al vuelo
+     * @return Un booleano informando del correcto funcionamiento añadiendo al pasajero
+     */
+    public boolean addPassenger(Passenger passenger) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (getNumberOfPassengers() &gt;= seats) {</span>
+<span class="fc" id="L90">            throw new RuntimeException(&quot;Not enough seats for flight &quot; + getFlightNumber());</span>
+        }
+<span class="fc" id="L92">        passenger.setFlight(this);</span>
+<span class="fc" id="L93">        return passengers.add(passenger);</span>
+    }
+
+    /**
+     * Método para eliminar a un pasajero del vuelo.
+     *
+     * En este método se elimina al pasajero que se haya pasado como parámetro.
+     * Para ello se establece el valor del objeto Flight como 'null' para el pasajero específico.
+     * Posteriormente se eliminará de la colección 'passengers' y se retornará un booleano informando del funcionamiento
+     * de la operación.
+     * @param passenger El pasajero que se desea eliminar del vuelo
+     * @return Un booleano informando del correcto funcionamiento eliminado al pasajero
+     */
+    public boolean removePassenger(Passenger passenger) {
+<span class="fc" id="L107">        passenger.setFlight(null);</span>
+<span class="fc" id="L108">        return passengers.remove(passenger);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
