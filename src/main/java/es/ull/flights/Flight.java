@@ -80,7 +80,7 @@ public class Flight {
      *
      * En este método se añade a aquel pasajero que se le pase como parámetro. Es requisito imprescindible para poder añadirlo
      * el no exceder el cupo de asientos establecido para el vuelo. En ese caso se lanzará una excepción RuntimeException
-     * con el mensaje "Not enough seats for flight" + "'flightNumber'". En otro caso, se añadirá al pasajero y se notificará
+     * con el mensaje "Not enough seats for flight" + "'flightNumber' ". En otro caso, se añadirá al pasajero y se notificará
      * el añadido con un booleano.
      * @param passenger El pasajero que se desea añadir al vuelo
      * @return Un booleano informando del correcto funcionamiento añadiendo al pasajero
